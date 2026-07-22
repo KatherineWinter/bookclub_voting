@@ -1,0 +1,394 @@
+/* === Base & Background === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, #0d0221 0%, #150534 40%, #1a0a3e 70%, #2d1b69 100%);
+    color: #e0d0ff;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Retro grid overlay */
+body::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    background:
+        linear-gradient(transparent 0%, rgba(255, 0, 128, 0.03) 100%),
+        repeating-linear-gradient(90deg, rgba(255, 0, 128, 0.07) 0px, transparent 1px, transparent 60px),
+        repeating-linear-gradient(0deg, rgba(255, 0, 128, 0.07) 0px, transparent 1px, transparent 60px);
+    transform: perspective(400px) rotateX(45deg);
+    transform-origin: bottom center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* === Typography === */
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, #ff6ec7, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 20px rgba(255, 110, 199, 0.4));
+}
+
+h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #00ffff;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* === Layout === */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* === Panels === */
+.panel {
+    background: rgba(13, 2, 33, 0.8);
+    border: 1px solid rgba(255, 110, 199, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow:
+        0 0 15px rgba(255, 110, 199, 0.1),
+        inset 0 0 15px rgba(255, 110, 199, 0.05);
+}
+
+/* === Inputs === */
+input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    color: #e0d0ff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 0.75rem;
+}
+
+input[type="text"]:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(224, 208, 255, 0.4);
+}
+
+input[readonly] {
+    cursor: text;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* === Buttons === */
+button, .submit-btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #ff6ec7, #a855f7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: box-shadow 0.3s, transform 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover, .submit-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 110, 199, 0.5), 0 0 40px rgba(168, 85, 247, 0.3);
+}
+
+button:active, .submit-btn:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.submit-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+/* === Share Link === */
+.share-link {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.share-link input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.share-link button {
+    padding: 0.75rem 1.5rem;
+    white-space: nowrap;
+}
+
+/* === Book List (Drag & Drop) === */
+.book-list {
+    list-style: none;
+    min-height: 50px;
+}
+
+.book-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: grab;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    user-select: none;
+}
+
+.book-list li:hover {
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+}
+
+.book-list li:active {
+    cursor: grabbing;
+}
+
+.drag-handle {
+    color: rgba(0, 255, 255, 0.5);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.book-title {
+    flex: 1;
+    font-weight: 600;
+}
+
+.added-by {
+    font-size: 0.8rem;
+    color: rgba(224, 208, 255, 0.5);
+    font-style: italic;
+}
+
+.remove-btn {
+    background: none;
+    border: 1px solid rgba(255, 64, 96, 0.3);
+    color: rgba(255, 64, 96, 0.6);
+    font-size: 1.1rem;
+    font-family: sans-serif;
+    padding: 0.2rem 0.5rem;
+    line-height: 1;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.remove-btn:hover {
+    color: #ff4060;
+    border-color: #ff4060;
+    box-shadow: 0 0 8px rgba(255, 64, 96, 0.3);
+    background: rgba(255, 64, 96, 0.1);
+}
+
+/* SortableJS drag states */
+.sortable-ghost {
+    border-color: #ff6ec7 !important;
+    box-shadow: 0 0 20px rgba(255, 110, 199, 0.4) !important;
+    opacity: 0.5;
+}
+
+.sortable-chosen {
+    border-color: #00ffff !important;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3) !important;
+}
+
+.sortable-drag {
+    box-shadow: 0 0 25px rgba(255, 110, 199, 0.5) !important;
+}
+
+/* === Results === */
+.results-list {
+    list-style: none;
+    counter-reset: none;
+}
+
+.results-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 110, 199, 0.2);
+    border-radius: 8px;
+}
+
+.results-list li:first-child {
+    border-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+.rank-number {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: #ff6ec7;
+    min-width: 2.5rem;
+}
+
+.results-list li:first-child .rank-number {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.book-score {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+/* === Status Messages === */
+.status-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.status-message.success {
+    background: rgba(0, 255, 128, 0.1);
+    border: 1px solid rgba(0, 255, 128, 0.3);
+    color: #00ff80;
+}
+
+.status-message.error {
+    background: rgba(255, 0, 64, 0.1);
+    border: 1px solid rgba(255, 0, 64, 0.3);
+    color: #ff4060;
+}
+
+/* === How It Works === */
+.how-it-works ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+.how-it-works li {
+    margin-bottom: 0.3rem;
+}
+
+/* === Links === */
+a {
+    color: #00ffff;
+    text-decoration: none;
+    transition: text-shadow 0.2s;
+}
+
+a:hover {
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.results-link {
+    display: block;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+/* === Refresh Indicator === */
+.refresh-indicator {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(224, 208, 255, 0.4);
+    margin-bottom: 1.5rem;
+}
+
+/* === Utilities === */
+.hidden {
+    display: none !important;
+}
+
+/* === Add Book Form === */
+.url-lookup {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.url-lookup input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.url-lookup button {
+    white-space: nowrap;
+}
+
+#add-book-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#add-book-form input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+#add-book-form button {
+    white-space: nowrap;
+}
+
+/* === Book Links === */
+.book-link {
+    color: #00ffff;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 255, 255, 0.3);
+    text-underline-offset: 2px;
+}
+
+.book-link:hover {
+    text-decoration-color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
