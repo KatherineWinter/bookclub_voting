@@ -181,42 +181,146 @@ function handle_get_results(PDO $pdo, string $poll_id): void {
     $books = $stmt->fetchAll();
     $book_count = count($books);
 
-    // Calculate Borda scores: rank 1 = N points, rank 2 = N-1, ..., rank N = 1
-    $scores = [];
+    $book_info = [];
     foreach ($books as $book) {
-        $scores[$book['id']] = [
+        $book_info[$book['id']] = [
             'id' => $book['id'],
             'title' => $book['title'],
             'added_by' => $book['added_by'],
             'url' => $book['url'],
-            'score' => 0
         ];
     }
 
-    $stmt = $pdo->prepare('SELECT book_id, `rank` FROM bc_votes WHERE poll_id = ?');
+    // Build per-voter ballots ordered by rank
+    $stmt = $pdo->prepare('SELECT voter_name, book_id, `rank` FROM bc_votes WHERE poll_id = ? ORDER BY voter_name, `rank`');
     $stmt->execute([$poll_id]);
-    $votes = $stmt->fetchAll();
+    $vote_rows = $stmt->fetchAll();
 
-    foreach ($votes as $vote) {
-        $book_id = $vote['book_id'];
-        if (isset($scores[$book_id])) {
-            $scores[$book_id]['score'] += ($book_count - $vote['rank'] + 1);
+    $ballots_by_voter = [];
+    foreach ($vote_rows as $row) {
+        $ballots_by_voter[$row['voter_name']][] = (int)$row['book_id'];
+    }
+    $ballots = array_values($ballots_by_voter);
+    $voters = array_keys($ballots_by_voter);
+
+    // Build voter breakdown: each voter's ranked list with book titles
+    $voter_ballots = [];
+    foreach ($ballots_by_voter as $name => $book_ids) {
+        $ranked = [];
+        foreach ($book_ids as $bid) {
+            if (isset($book_info[$bid])) {
+                $ranked[] = $book_info[$bid]['title'];
+            }
         }
+        $voter_ballots[] = ['name' => $name, 'ranking' => $ranked];
     }
 
-    // Sort by score descending
-    usort($scores, fn($a, $b) => $b['score'] - $a['score']);
+    // Run RCV (Instant Runoff Voting)
+    $eliminated = [];
+    $rounds = [];
+    $winner = null;
+    $total_ballots = count($ballots);
 
-    // Get list of voters
-    $stmt = $pdo->prepare('SELECT DISTINCT voter_name FROM bc_votes WHERE poll_id = ?');
-    $stmt->execute([$poll_id]);
-    $voters = array_column($stmt->fetchAll(), 'voter_name');
+    while ($winner === null && count($eliminated) < $book_count) {
+        // Count first-choice votes among non-eliminated books
+        $counts = [];
+        foreach ($book_info as $id => $_) {
+            if (!isset($eliminated[$id])) {
+                $counts[$id] = 0;
+            }
+        }
+
+        $exhausted = 0;
+        foreach ($ballots as $ballot) {
+            $found = false;
+            foreach ($ballot as $book_id) {
+                if (!isset($eliminated[$book_id])) {
+                    $counts[$book_id]++;
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $exhausted++;
+            }
+        }
+
+        $active_ballots = $total_ballots - $exhausted;
+
+        // Record this round
+        $round_data = [];
+        foreach ($counts as $id => $count) {
+            $round_data[] = [
+                'id' => $id,
+                'title' => $book_info[$id]['title'],
+                'votes' => $count,
+            ];
+        }
+        usort($round_data, fn($a, $b) => $b['votes'] - $a['votes']);
+        $rounds[] = [
+            'candidates' => $round_data,
+            'exhausted' => $exhausted,
+        ];
+
+        // Check for majority winner
+        if ($active_ballots > 0 && $round_data[0]['votes'] > $active_ballots / 2) {
+            $winner = $round_data[0]['id'];
+            break;
+        }
+
+        // If only one candidate left, they win
+        if (count($counts) <= 1) {
+            if (count($counts) === 1) {
+                $winner = array_key_first($counts);
+            }
+            break;
+        }
+
+        // Eliminate the one candidate with fewest votes
+        // On tie for last, eliminate the one with the lowest book ID
+        $min_votes = min($counts);
+        $eliminate_id = null;
+        foreach ($counts as $id => $count) {
+            if ($count === $min_votes && ($eliminate_id === null || $id < $eliminate_id)) {
+                $eliminate_id = $id;
+            }
+        }
+        $eliminated[$eliminate_id] = true;
+    }
+
+    // Build final ranking: winner first, then by last round they survived
+    $final_results = [];
+    foreach ($book_info as $id => $info) {
+        $last_round = 0;
+        $last_votes = 0;
+        foreach ($rounds as $ri => $round) {
+            foreach ($round['candidates'] as $c) {
+                if ($c['id'] === $id) {
+                    $last_round = $ri;
+                    $last_votes = $c['votes'];
+                }
+            }
+        }
+        $final_results[] = array_merge($info, [
+            'last_round' => $last_round,
+            'last_votes' => $last_votes,
+            'is_winner' => ($id === $winner),
+        ]);
+    }
+    usort($final_results, function ($a, $b) {
+        if ($a['is_winner'] !== $b['is_winner']) return $b['is_winner'] - $a['is_winner'];
+        if ($a['last_round'] !== $b['last_round']) return $b['last_round'] - $a['last_round'];
+        return $b['last_votes'] - $a['last_votes'];
+    });
 
     echo json_encode([
         'poll' => $poll,
-        'results' => array_values($scores),
+        'results' => $final_results,
+        'rounds' => $rounds,
         'voters' => $voters,
-        'book_count' => $book_count
+        'voter_ballots' => $voter_ballots,
+        'book_count' => $book_count,
+        'winner' => $winner,
     ]);
 }
 

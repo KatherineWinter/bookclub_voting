@@ -1,0 +1,6 @@
+schema.sql
+db.php
+.env
+.env.prod
+.env.local
+.DS_Store

@@ -28,15 +28,26 @@ if (empty($poll_id)) {
             <p id="voter-list">No votes yet</p>
         </div>
 
+        <div class="panel">
+            <h2>Rounds</h2>
+            <div id="rounds-detail"></div>
+        </div>
+
+        <div class="panel">
+            <h2>How Everyone Voted</h2>
+            <div id="voter-ballots"></div>
+        </div>
+
         <div class="panel how-it-works">
             <h2>How Ranking Works</h2>
-            <p>We use <strong>Borda count</strong> scoring. Each voter drags books into their preferred order. With <strong id="book-count">N</strong> books in the poll:</p>
+            <p>We use <strong>Ranked Choice Voting</strong> (instant runoff). Each voter drags books into their preferred order.</p>
             <ul>
-                <li>1st place = <strong id="max-points">N</strong> points</li>
-                <li>2nd place = <strong id="second-points">N-1</strong> points</li>
-                <li>Last place = <strong>1</strong> point</li>
+                <li>First, everyone's <strong>#1 choice</strong> is counted</li>
+                <li>If a book has a <strong>majority</strong> (over 50%), it wins</li>
+                <li>Otherwise, the book with the <strong>fewest votes</strong> is eliminated</li>
+                <li>Voters who chose that book have their vote <strong>transferred</strong> to their next choice</li>
+                <li>This repeats until a book wins a majority</li>
             </ul>
-            <p>The book with the highest total score across all voters wins!</p>
         </div>
 
         <a href="vote.php?poll_id=<?= $poll_id ?>" class="results-link">&larr; Back to Voting</a>

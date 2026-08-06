@@ -392,3 +392,78 @@ a:hover {
     text-decoration-color: #00ffff;
     text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
+
+/* === RCV Rounds === */
+.round-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.75rem;
+}
+
+.round-table th {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    color: #00ffff;
+}
+
+.round-table td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.round-table td:last-child {
+    text-align: right;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: #00ffff;
+}
+
+.round-table tr.round-winner td {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.round-table tr.exhausted td {
+    color: rgba(224, 208, 255, 0.4);
+    font-style: italic;
+}
+
+#rounds-detail h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: #ff6ec7;
+    margin: 1rem 0 0.5rem;
+}
+
+#rounds-detail h3:first-child {
+    margin-top: 0;
+}
+
+.eliminated-note {
+    font-size: 0.8rem;
+    color: rgba(255, 64, 96, 0.7);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+}
+
+.voter-ballot {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.winner-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ff6ec7);
+    color: #0d0221;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
