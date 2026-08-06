@@ -100,11 +100,17 @@
         ballotsDiv.innerHTML = '';
         if (data.voter_ballots && data.voter_ballots.length > 0) {
             data.voter_ballots.forEach(vb => {
-                const p = document.createElement('p');
-                p.className = 'voter-ballot';
-                p.innerHTML = '<strong>' + escapeHtml(vb.name) + ':</strong> ' +
-                    vb.ranking.map((title, i) => (i + 1) + '. ' + escapeHtml(title)).join(', ');
-                ballotsDiv.appendChild(p);
+                const div = document.createElement('div');
+                div.className = 'voter-ballot';
+                div.innerHTML = '<strong>' + escapeHtml(vb.name) + '</strong>';
+                const ol = document.createElement('ol');
+                vb.ranking.forEach(title => {
+                    const li = document.createElement('li');
+                    li.textContent = title;
+                    ol.appendChild(li);
+                });
+                div.appendChild(ol);
+                ballotsDiv.appendChild(div);
             });
         }
 

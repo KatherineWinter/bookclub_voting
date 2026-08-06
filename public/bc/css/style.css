@@ -518,12 +518,21 @@ a:hover {
 }
 
 .voter-ballot {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     line-height: 1.5;
 }
 
 .voter-ballot strong {
     color: #ff6ec7;
+}
+
+.voter-ballot ol {
+    padding-left: 1.5rem;
+    margin: 0.25rem 0 0;
+}
+
+.voter-ballot ol li {
+    margin-bottom: 0.15rem;
 }
 
 .winner-badge {
