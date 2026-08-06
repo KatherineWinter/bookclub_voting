@@ -11,7 +11,7 @@ if (empty($poll_id)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results — Bookclub</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?= filemtime(__DIR__ . '/css/style.css') ?>">
 </head>
 <body>
     <div class="container">
@@ -60,6 +60,6 @@ if (empty($poll_id)) {
     <script>
         const POLL_ID = <?= json_encode($poll_id) ?>;
     </script>
-    <script src="js/results.js"></script>
+    <script src="js/results.js?v=<?= filemtime(__DIR__ . '/js/results.js') ?>"></script>
 </body>
 </html>
