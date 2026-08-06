@@ -393,6 +393,52 @@ a:hover {
     text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
 
+/* === Tabs === */
+.tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background: rgba(13, 2, 33, 0.6);
+    border: 1px solid rgba(255, 110, 199, 0.2);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    color: rgba(224, 208, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tab-btn:hover {
+    color: #e0d0ff;
+    border-color: rgba(255, 110, 199, 0.4);
+    box-shadow: none;
+}
+
+.tab-btn.active {
+    background: rgba(13, 2, 33, 0.8);
+    color: #00ffff;
+    border-color: rgba(255, 110, 199, 0.3);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.tab-content {
+    border-radius: 0 0 12px 12px;
+    margin-top: 0;
+}
+
+.tab-content h2:not(:first-child) {
+    margin-top: 1.5rem;
+}
+
 /* === RCV Rounds === */
 .round-table {
     width: 100%;
