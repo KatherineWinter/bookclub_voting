@@ -59,15 +59,30 @@
                 table.innerHTML = html;
                 roundsDetail.appendChild(table);
 
-                // Show who was eliminated (all candidates in this round but not in next)
-                if (ri < data.rounds.length - 1) {
-                    const nextIds = new Set(data.rounds[ri + 1].candidates.map(c => c.id));
-                    const eliminated = round.candidates.filter(c => !nextIds.has(c.id));
-                    if (eliminated.length > 0) {
-                        const p = document.createElement('p');
-                        p.className = 'eliminated-note';
-                        p.textContent = 'Eliminated: ' + eliminated.map(c => c.title).join(', ');
-                        roundsDetail.appendChild(p);
+                // Show elimination and vote transfers
+                if (round.eliminated) {
+                    const p = document.createElement('p');
+                    p.className = 'eliminated-note';
+                    p.textContent = 'Eliminated: ' + round.eliminated;
+                    roundsDetail.appendChild(p);
+
+                    if (round.eliminated_reason) {
+                        const reason = document.createElement('p');
+                        reason.className = 'eliminated-reason';
+                        reason.textContent = round.eliminated_reason;
+                        roundsDetail.appendChild(reason);
+                    }
+
+                    if (round.transfers && round.transfers.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'transfer-list';
+                        round.transfers.forEach(t => {
+                            const li = document.createElement('li');
+                            li.innerHTML = escapeHtml(t.voter) + '\'s vote → ' +
+                                (t.to ? escapeHtml(t.to) : '<em>exhausted</em>');
+                            ul.appendChild(li);
+                        });
+                        roundsDetail.appendChild(ul);
                     }
                 }
             });

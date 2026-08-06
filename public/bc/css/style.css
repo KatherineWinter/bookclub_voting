@@ -492,7 +492,29 @@ a:hover {
     font-size: 0.8rem;
     color: rgba(255, 64, 96, 0.7);
     font-style: italic;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.15rem;
+}
+
+.eliminated-reason {
+    font-size: 0.7rem;
+    color: rgba(224, 208, 255, 0.35);
+    margin-bottom: 0.25rem;
+}
+
+.transfer-list {
+    list-style: none;
+    margin: 0 0 0.75rem 0;
+    padding: 0;
+}
+
+.transfer-list li {
+    font-size: 0.8rem;
+    color: rgba(224, 208, 255, 0.6);
+    padding: 0.15rem 0 0.15rem 1rem;
+}
+
+.transfer-list li em {
+    color: rgba(255, 64, 96, 0.5);
 }
 
 .voter-ballot {

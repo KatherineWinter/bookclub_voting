@@ -49,6 +49,7 @@ if (empty($poll_id)) {
                     <li>Otherwise, the book with the <strong>fewest votes</strong> is eliminated</li>
                     <li>Voters who chose that book have their vote <strong>transferred</strong> to their next choice</li>
                     <li>This repeats until a book wins a majority</li>
+                    <li>Ties are broken using a <a href="https://www.rcv123.org/tiebreaking" target="_blank" rel="noopener">weighted tiebreaker score</a></li>
                 </ul>
             </div>
         </div>
