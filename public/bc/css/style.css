@@ -522,6 +522,10 @@ a:hover {
     line-height: 1.5;
 }
 
+.voter-ballot strong {
+    color: #ff6ec7;
+}
+
 .winner-badge {
     display: inline-block;
     background: linear-gradient(135deg, #ffd700, #ff6ec7);
